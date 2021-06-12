@@ -5,6 +5,7 @@ import cloudyImage from '../assests/cloud.jpg'
 import rainyImage from '../assests/rain.jpg'
 import nightSky from '../assests/night.jpg'
 import sunny from '../assests/sunny.jpg'
+import clearDay from '../assests/clear-day.jpg'
 
 // import searchBar from './searchBar'
 
@@ -12,7 +13,7 @@ function Main() {
   
 
   const [data, setData] = useState([]);
-  const [icons,setIcons] = useState([])
+  // const [icons,setIcons] = useState([])
   const [getState, setGetState] = useState('New york')
   const [state, setState] = useState('New york')
   const apiKey = process.env.REACT_APP_API_KEY 
@@ -52,7 +53,7 @@ function Main() {
   };
 
   const sunsetTime = data.sys
-  const imageUrl =  time > sunsetTime ? nightSky : sunny
+  const imageUrl =  time > sunsetTime ? nightSky : clearDay
   const backgroundStyle = { 
     backgroundImage: `url(${imageUrl})`,
     backgroundSize: 'cover',

@@ -8,6 +8,7 @@ import sunny from "../assests/sunny.jpg";
 import clearDay from "../assests/clear-day.jpg";
 import MultiDayWeather from "./MultiDayWeather";
 import moment from "moment";
+import LoadingComponent from "./LoadingComponent";
 
 // import searchBar from './searchBar'
 
@@ -15,13 +16,14 @@ function Main() {
   const [data, setData] = useState([]);
   
   // const [icons,setIcons] = useState([])
-  
+  let [error, setError] = useState(false);
+  let [loading, setLoading] = useState(false);
   const [lat, setLat] = useState('40.7128')
   const [long, setLong] = useState('-74.0060')
   // const [geoData, setGeoData] = useState([])
   const [multiData, setMultiData] = useState([])
-  const [getState, setGetState] = useState("West Springfield");
-  const [state, setState] = useState("West Springfield");
+  const [getState, setGetState] = useState("New York");
+  const [state, setState] = useState("New York");
   const apiKey = process.env.REACT_APP_API_KEY;
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${state}&appid=${apiKey}`;
   
@@ -30,6 +32,7 @@ function Main() {
  
 
   useEffect(() => {
+    
     fetch(apiUrl)
       .then((res) => res.json())
       .then((result) => {
@@ -38,15 +41,13 @@ function Main() {
         setLong(result.coord.lon)
         console.log(result);
       })
-    .catch(err => alert("Can't find city make sure the name is correct!"))
+    .catch(err => {
+      setError(true);
+      setLoading(false);
+      console.log(err.message)
+    })
   }, [apiUrl]);
 
-  if(lat && long === undefined){
-   
-    setLat(40.7128)
-    setLong(-74.0060)
-    
-  }
 
   const oneApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude={minutely}&appid=${process.env.REACT_APP_API_KEY}`
     
@@ -84,7 +85,7 @@ function Main() {
     return (k - 273.15).toFixed(2);
   };
 
-  const sunsetTime = data.sys
+  const sunsetTime = multiData.current
   const imageUrl = time > sunsetTime ? nightSky : clearDay;
   const backgroundStyle = {
     backgroundImage: `url(${imageUrl})`,
@@ -109,11 +110,7 @@ function Main() {
         />
         
       ) : (
-        <div>
-          <Dimmer>
-            <Loader>Loading..</Loader>
-          </Dimmer>
-        </div>
+        <LoadingComponent data={data} multiData={multiData} error={error} loading={loading} />
       )}
       <MultiDayWeather multiData={multiData} unitConvert={kelvinToFarenheit}/>
     </div>

@@ -1,25 +1,18 @@
 import React from 'react';
 import { Form, Container,Grid} from 'semantic-ui-react'
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt,faCloudRain, faCloudShowersHeavy, faSnowflake, faSun, faCloud, faSmog } from '@fortawesome/free-solid-svg-icons'
-// import { Utils } from '../utils';
+
+
 
 const Weather = ({weatherData, handleInput, handleSubmit, unitConvert, getState}) => {
 
-    const offset = weatherData.timezone;
-    const sunset = weatherData.sys.sunset;
-    const d = new Date()
-    const localTime = d.getTime()
-    const localOffset = d.getTimezoneOffset() * 60000
-    const utc = localTime + localOffset
-    const cityTime = utc + (1000 * offset)
-    const newDate = new Date(cityTime)
-    // console.log(cityTime);
-    // console.log(localTime);
-    // let localTime = 
-    // const apiImgUrl = process.env.REACT_APP_ICON_URL
-    // const {icon} = weatherData.weather[0]
+   
+    
+
+     
+   
     const main = weatherData.weather[0].main
     
 
@@ -43,18 +36,11 @@ const Weather = ({weatherData, handleInput, handleSubmit, unitConvert, getState}
     }
 
   
-    // <p>Temprature: {Math.round(unitConvert(weatherData.main.temp))} &deg;C</p>
-    // <p>Current Time: {(new Date(weatherData.dt*1000)).toLocaleTimeString('en-US')}</p>
-    // <p>Local Sunrise: {new Date(weatherData.sys.sunrise*1000+(weatherData.timezon)).toLocaleTimeString('en-US')}</p>
-    
-    // {/* <p>{moment.unix(weatherData.sys.sunrise).tz(weatherData.name).format()}</p> */}
-    // <p>Local Sunset: {(new Date(weatherData.sys.sunset*1000+(weatherData.timezone)).toLocaleTimeString('en-US'))}</p>
-    // <p>Condition: {weatherData.weather[0].main}<i>{weatherIcon}</i></p>
-    // <p>Humidity: {weatherData.main.humidity}% </p>
+   
     return (
         <Container >
-            <Container>
-                <Form onSubmit={handleSubmit}>
+            <Container >
+                <Form style={searchContainer} onSubmit={handleSubmit}>
                     <Form.Input action='Search' type="text" placeholder="Enter City..." onChange={handleInput} value={getState}/>
                     
                 </Form>
@@ -88,11 +74,13 @@ const Weather = ({weatherData, handleInput, handleSubmit, unitConvert, getState}
                                <span style={spanInfoStyle}>Humidity</span>
                                 </Grid.Column>
                                 <Grid.Column style={infoColStyle}>
-                                    <p style={pInfoStyle}> {weatherData.wind.speed}mph</p>
+                                    <p style={pInfoStyle}> {weatherData.wind.speed} m/s</p>
                                     <span style={spanInfoStyle}>Wind</span>
-                                    <p style={pInfoStyle}>{moment.unix(weatherData.sys.sunrise).format("h:mm a")}</p>
+                                    <p style={pInfoStyle}>{moment.unix(weatherData.sys.sunrise).format("LT")}</p>
+                                    
                                     <span style={spanInfoStyle}>Sunrise</span>
-                                    <p style={pInfoStyle}>{moment.unix(weatherData.sys.sunset).format("h:mm a")}</p>
+                                    <p style={pInfoStyle}>{moment.unix(weatherData.sys.sunset).format("LT")}</p>
+                                    
                                     <span style={spanInfoStyle}>Sunset</span>
                                 </Grid.Column>
                             </Grid.Row>
@@ -101,9 +89,17 @@ const Weather = ({weatherData, handleInput, handleSubmit, unitConvert, getState}
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+            
            
         </Container>
     )
+}
+
+const searchContainer = {
+    paddingTop: "5%",
+    width:"1000px",
+    textAllign: "center"
+    
 }
 
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Dimmer, Loader } from "semantic-ui-react";
 
-const LoadingComponent = ({error,loading,data, multidata}) => {
+const LoadingComponent = ({error,loading}) => {
     
     return (
         <div>
-            {error && alert("Please enter a valid city.")}
+           
         
-            {loading && 
-            <Dimmer>
+            
+            { loading &&<Dimmer>
                 <Loader>Loading..</Loader>
             </Dimmer>}
         </div>

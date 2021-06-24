@@ -1,18 +1,16 @@
-import React from 'react';
+import React from "react";
 import { Dimmer, Loader } from "semantic-ui-react";
 
-const LoadingComponent = ({error,loading}) => {
+const LoadingComponent = () => {
+  return (
     
-    return (
-        <div>
-           
-        
-            
-            { loading &&<Dimmer>
-                <Loader>Loading..</Loader>
-            </Dimmer>}
-        </div>
-    )
-}
+     
+      <Dimmer active>
+        <Loader />
+      </Dimmer>
+    
+    
+  );
+};
 
-export default LoadingComponent
+export default LoadingComponent;

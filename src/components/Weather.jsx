@@ -60,11 +60,9 @@ const Weather = ({
   
 
 
-  function convertSuntime(unixTime, offset){
-    
-  }
+ 
 
-  console.log(convertSuntime(weatherData.dt, weatherData.timezone/3600));
+  // console.log(convertSuntime(weatherData.dt, weatherData.timezone/3600));
 
   return (
     <Container>
@@ -79,6 +77,7 @@ const Weather = ({
           />
         </Form>
       </Container>
+      <Container>
 
       <Grid columns={1} style={{ marginTop: "10%" }}>
         <Grid.Row>
@@ -128,22 +127,13 @@ const Weather = ({
                 <Grid.Column style={infoColStyle}>
                   <p style={pInfoStyle}> {weatherData.wind.speed} m/s</p>
                   <span style={spanInfoStyle}>Wind</span>
-                  {/* <p style={pInfoStyle}>
-                    {moment
-                      .unix(multiData.current.sunrise)
-                      .tz(multiData.timezone)
-                      .format("LT") && <LoadingComponent/>}
+                  <p style={pInfoStyle}>
+                  {moment.unix(weatherData.sys.sunrise).utcOffset(weatherData.timezone/3600).format("LT")}
                   </p>
-
                   <span style={spanInfoStyle}>Sunrise</span>
                   <p style={pInfoStyle}>
-                    {moment
-                      .unix(multiData.current.sunset)
-                      .tz(multiData.timezone)
-                      .format("LT") && <LoadingComponent/>}
-                  </p> */}
-                  {/* <p>{convertSuntime(weatherData.sys.sunrise,weatherData.timezone/3600)}</p> */}
-
+                  {moment.unix(weatherData.sys.sunset).utcOffset(weatherData.timezone/3600).format("LT")}
+                  </p>
                   <span style={spanInfoStyle}>Sunset</span>
                 </Grid.Column>
               </Grid.Row>
@@ -151,6 +141,7 @@ const Weather = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      </Container>
     </Container>
   );
 };

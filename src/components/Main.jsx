@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Weather from "./Weather";
-import { Dimmer, Loader } from "semantic-ui-react";
-import cloudyImage from "../assests/cloud.jpg";
-import rainyImage from "../assests/rain.jpg";
+// import { Dimmer, Loader } from "semantic-ui-react";
+// import cloudyImage from "../assests/cloud.jpg";
+// import rainyImage from "../assests/rain.jpg";
 import nightSky from "../assests/night.jpg";
-import sunny from "../assests/sunny.jpg";
+// import sunny from "../assests/sunny.jpg";
 import clearDay from "../assests/clear-day.jpg";
 import MultiDayWeather from "./MultiDayWeather";
-import moment from "moment";
+// import moment from "moment";
 import LoadingComponent from "./LoadingComponent";
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom/cjs/react-dom.development";
+// import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom/cjs/react-dom.development";
 
 // import searchBar from './searchBar'
 
@@ -17,8 +17,8 @@ function Main() {
   const [data, setData] = useState([]);
   
   // const [icons,setIcons] = useState([])
-  let [error, setError] = useState(__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED);
-  let [loading, setLoading] = useState(false);
+  let [error, setError] = useState(null);
+  let [loading, setLoading] = useState(true);
   const [lat, setLat] = useState('40.7128')
   const [long, setLong] = useState('-74.0060')
   // const [geoData, setGeoData] = useState([])
@@ -40,12 +40,12 @@ function Main() {
         throw new Error("Server responds with error!, Invalid city name!")
         
       }
-        return res.json()})
+      return res.json()})
       .then((result) => {
         setData(result);
         setLat(result.coord.lat)
         setLong(result.coord.lon)
-        setLoading(true)
+        setLoading(false)
         console.log(result);
       },
       err => {
@@ -61,19 +61,33 @@ function Main() {
 
   const oneApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude={minutely}&appid=${process.env.REACT_APP_API_KEY}`
     
-
   useEffect(() => {
+    const getData = () => {
+      fetch(oneApiUrl)
+        .then((res) => {
+        if(res.status >= 400){
+          throw new Error("Invalid longitude and latitude values")
+          
+        }
+        return res.json()})
+        .then((result) => {
+          setMultiData(result);
 
-    fetch(oneApiUrl)
-    .then((resp) => resp.json())
-    .then((result1) => {
-      setMultiData(result1);
-      // setLat(result1.lat)
-      // setLong(result1.lon)
-      console.log(result1);
-    })  
-    .catch(err => alert("something is wrong"))
+          setLoading(false)
+          console.log(result);
+        },
+        err => {
+        setError(err);
+        setLoading(true);
+        alert(err.message)
+        console.log(err.message)
+      })
+    }
+    getData()
+    
   }, [oneApiUrl]);
+
+ 
 
   
 
@@ -97,29 +111,26 @@ function Main() {
 
   const sunsetTime = multiData.current
   const imageUrl = time > sunsetTime ? nightSky : clearDay;
+
+
   const backgroundStyle = {
     backgroundImage: `url(${imageUrl})`,
     backgroundSize: "cover",
-    height: "100vh",
+    backgroundPosition: "center",
+    backgroundeRepeat:"no-repeat",
+    backgroundAttachment:"fixed",
+    height: "100%",
     overflow:""
     
   };
 
- 
-  
-
- 
-    
-  // if(error) {
-  //   return <div> {error.message} </div>
-  // } else if (!loading) {
-  //   return <div> Loading... </div>
-  // } else {
-
-  
   return (
-  <div style={backgroundStyle}>
-    {typeof data.main != "undefined" ? (
+    <div style={backgroundStyle}>
+    {loading ? (<LoadingComponent />
+      
+      
+      
+    ) : (
       <Weather
         input={getState}
         weatherData={data}
@@ -128,14 +139,30 @@ function Main() {
         unitConvert={kelvinToFarenheit}
         multiData={multiData}
       />
-      
-    ) : (
-      <LoadingComponent loading={loading}/>
     )}
-    <MultiDayWeather multiData={multiData} unitConvert={kelvinToFarenheit}/>
-  </div>
+
+    <MultiDayWeather multiData={multiData || null } unitConvert={kelvinToFarenheit}/>
+    </div>
+  
   );
-  // }
+
+  // return (
+  //   <div style={backgroundStyle}>
+  //     {typeof data.main != undefined && <Weather
+  //       input={getState}
+  //       weatherData={data}
+  //       handleInput={inputHandler}
+  //       handleSubmit={submitHandler}
+  //       unitConvert={kelvinToFarenheit}
+  //       multiData={multiData}
+  //     />}
+  //     <MultiDayWeather multiData={multiData} unitConvert={kelvinToFarenheit}/>
+  //     {loading && <LoadingComponent loading={loading} />}
+  //     {error && <div> error loading data!</div>}
+  //   </div>
+
+  
+  
         
 }
 

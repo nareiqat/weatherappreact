@@ -1,81 +1,101 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card, Image, Icon, Container } from "semantic-ui-react";
+// import { Card, Image, Icon } from "semantic-ui-react";
+import { Container, Card, Grid, CardActionArea,CardContent, CardMedia, Typography } from "@material-ui/core";
 import moment from "moment-timezone";
+import LoadingComponent from './LoadingComponent';
+import { makeStyles } from '@material-ui/core/styles';
+import { styles } from "ansi-colors";
+import { flexbox } from "@material-ui/system";
+
+const useStyles = makeStyles({
+  root : {
+    maxWidth: 405,
+  },
+  media: {
+    height: 150,
+  },
+  title: {
+    textAlign: "center",
+   
+    fontWeight: 500,
+  },
+  header : {
+    fontWeight: "700",
+    fontSize: "1.5rem",
+  },
+  info : {
+    display: "inline-block"
+  }
+})
 
 const MultiDayWeather = ({ multiData, unitConvert }) => {
-  // function DailyTemperatures(multiData){
 
-  //   const DailyData = multiData.current.daily.map((day) =>
-
-  //       <div key={day.dt}>
-  //         <div>{day.temp.day}</div>
-  //         <div>{day.temp.min}</div>
-  //         <div>{day.temp.max}</div>
-  //       </div>
-
-  //   )
-  //   return (
-  //     <Grid.Column>
-  //       {DailyData}
-  //     </Grid.Column>
-  //   )
-  // }
-
-  // const iconurl = "https://openweathermap.org/img/wn" + `${multiData.daily.weather[0].icon}` + ".png"
-  
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const date = new Date()
+  const classes = useStyles();
   
   // console.log(date.toLocaleDateString('en-US',options));
   return (
-    <Container style={{paddingTop: "5%"}}>
-      <h2 style={{ textAlign: "center" }}>7 Day forecast</h2>
+    <Container fluid style={{margin:"5rem"}}>
+      <Typography variant="h3" component="h4" className={styles.title}>7 Day forecast</Typography>
 
       {/* <DailyTemperatures /> */}
       
-      <Card.Group itemsPerRow={8}>
-        {multiData.daily !== undefined ? (
-          multiData.daily.map((day) => {
-            return (
-              <Card style={{backgroundColor:"white"}}>
-                <Image style={{backgroundColor:"white"}} src={"https://openweathermap.org/img/wn/" + day.weather[0].icon + ".png"} wrapped ui={false} />
-                <Card.Content>
-                  <Card.Header>
-                   {/* {date.toLocaleDateString('en-US',options)}  */}
-                   {moment.unix(day.dt).format(" dddd, MMMM Do YYYY")}
-                  </Card.Header>
-                  <Card.Description>{day.weather[0].description}</Card.Description>
-                  <Card.Meta>
-                    sunrise:
-                    {moment
-                      .unix(day.sunrise)
-                      .tz(multiData.timezone)
-                      .format("LT")}
-                  </Card.Meta>
-                  <Card.Meta> sunset:
-                    {moment
-                      .unix(day.sunset)
-                      .tz(multiData.timezone)
-                      .format("LT")}</Card.Meta>
-                  <Card.Description style={{display:"inline"}}>
-                  <Card.Description>
-                    Low: {Math.floor(unitConvert(day.temp.min))} &deg;C{" "}
-                  </Card.Description>
-                  <Card.Description>
-                    High: {Math.floor(unitConvert(day.temp.max))} &deg;C{" "}
-                  </Card.Description>
-                  </Card.Description>    
-                  
-                </Card.Content>
-              </Card>
-            );
-          })
-        ) : (
-          <div>Please search for a city!</div>
-        )}
-      </Card.Group>
+      <Grid container direction ="row" justify="center" Allignspacing={2}>
+
+          {multiData.daily  ? (
+            multiData.daily.map((day) => {
+              return (
+              <Grid item xs={12} sm={2}>  
+                <Card className={classes.root} variant="outlined"> 
+                  <CardActionArea >
+                    
+                    <CardContent>
+                      <Typography className={classes.header}>
+                      {moment.unix(day.dt).format(" ddd, MMM D YYYY")}
+                      </Typography>
+                      <Typography >{day.weather[0].description}</Typography>
+                      {/* <Typography className={styles.info}>
+                        sunrise:
+                        {moment
+                          .unix(day.sunrise)
+                          .tz(multiData.timezone)
+                          .format("LT")}
+                      </Typography>
+                      <Typography className={styles.info}> sunset:
+                        {moment
+                          .unix(day.sunset)
+                          .tz(multiData.timezone)
+                          .format("LT")}
+                      </Typography> */}
+                      <CardMedia className={classes.media} image={"https://openweathermap.org/img/wn/" + day.weather[0].icon + ".png"} title={day.weather[0].description} />
+                      <Container className={styles.info}>
+                        <Typography  >
+                          Low: {Math.floor(unitConvert(day.temp.min))} &deg;C{" "}
+                        </Typography>
+                        <Typography>
+                          High: {Math.floor(unitConvert(day.temp.max))} &deg;C{" "}
+                        </Typography>
+                      </Container>
+                      
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+              );
+            })
+          ) : (
+            <LoadingComponent />
+          )}
+      </Grid>
     </Container>
   );
 };
+
+// 
+const cardStyle = {
+  backgroundColor: "white",
+  // width:"300px",
+  
+  
+}
 
 export default MultiDayWeather;

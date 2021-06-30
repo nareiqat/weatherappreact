@@ -1,0 +1,33 @@
+.container {
+    max-width: 1335px;
+    margin: 0 auto;
+}
+
+.grid-row {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.grid-item {
+    height: 550px;
+    flex-basis: 175%;
+    /* -ms-flex: auto; */
+    width: 259px;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+  
+@media(min-width: 1073px) {
+    .grid-item {
+      flex-basis: 33.33%;
+    }
+}
+
+@media(min-width: 815px) {
+    .grid-item {
+        flex-basis: 50%;
+    }
+}
+

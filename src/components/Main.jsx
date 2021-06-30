@@ -28,6 +28,20 @@ function Main() {
   const apiKey = process.env.REACT_APP_API_KEY;
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${state}&appid=${apiKey}`;
 
+  function calcTime(offset) {
+    // create Date object for current location
+    const d = new Date();
+    // convert to msec
+    // add local time zone offset
+    // get UTC time in msec
+    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+    // create new Date object for different city
+    // using supplied offset
+    const nd = new Date(utc + 3600000 * offset);
+    // return time as a string
+    return nd.toLocaleTimeString();
+  }
+
   useEffect(() => {
     const getData = () => {
       fetch(apiUrl)
@@ -86,7 +100,12 @@ function Main() {
   }, [oneApiUrl]);
 
   
-  const sunsetTime = moment
+  const sunRise = moment
+    .unix(data?.sys?.sunrise)
+    .utcOffset(data.timezone / 3600)
+    .format("HH");
+
+  const sunset = moment
     .unix(data?.sys?.sunset)
     .utcOffset(data.timezone / 3600)
     .format("HH");
@@ -103,12 +122,12 @@ function Main() {
   };
 
   // const sunsetTime = multiData.current
-  const time = moment().format("HH");
+  const time = moment().utcOffset(data.timezone / 3600).format("HH")
   console.log(time);
   //current time for example if its 2pm time = 14
-  console.log(sunsetTime);
+  console.log(sunRise);
   //localsunsetTime in 24hrs
-  const imageUrl = (time > sunsetTime) ? nightSky : clearDay;
+  const imageUrl = (time > sunRise && time < sunset) ? clearDay : nightSky;
 
   const backgroundStyle = {
     backgroundImage: `url(${imageUrl})`,

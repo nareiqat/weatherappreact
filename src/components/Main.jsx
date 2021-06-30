@@ -28,19 +28,6 @@ function Main() {
   const apiKey = process.env.REACT_APP_API_KEY;
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${state}&appid=${apiKey}`;
 
-  function calcTime(offset) {
-    // create Date object for current location
-    const d = new Date();
-    // convert to msec
-    // add local time zone offset
-    // get UTC time in msec
-    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-    // create new Date object for different city
-    // using supplied offset
-    const nd = new Date(utc + 3600000 * offset);
-    // return time as a string
-    return nd.toLocaleTimeString();
-  }
 
   useEffect(() => {
     const getData = () => {
@@ -161,20 +148,6 @@ function Main() {
     </div>
   );
 
-  // return (
-  //   <div style={backgroundStyle}>
-  //     {typeof data.main != undefined && <Weather
-  //       input={getState}
-  //       weatherData={data}
-  //       handleInput={inputHandler}
-  //       handleSubmit={submitHandler}
-  //       unitConvert={kelvinToFarenheit}
-  //       multiData={multiData}
-  //     />}
-  //     <MultiDayWeather multiData={multiData} unitConvert={kelvinToFarenheit}/>
-  //     {loading && <LoadingComponent loading={loading} />}
-  //     {error && <div> error loading data!</div>}
-  //   </div>
 }
 
 export default Main;

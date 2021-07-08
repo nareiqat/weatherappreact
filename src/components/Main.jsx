@@ -28,7 +28,6 @@ function Main() {
   const apiKey = process.env.REACT_APP_API_KEY;
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${state}&appid=${apiKey}`;
 
-
   useEffect(() => {
     const getData = () => {
       fetch(apiUrl)
@@ -86,7 +85,6 @@ function Main() {
     getData();
   }, [oneApiUrl]);
 
-  
   const sunRise = moment
     .unix(data?.sys?.sunrise)
     .utcOffset(data.timezone / 3600)
@@ -109,12 +107,14 @@ function Main() {
   };
 
   // const sunsetTime = multiData.current
-  const time = moment().utcOffset(data.timezone / 3600).format("HH")
+  const time = moment()
+    .utcOffset(data.timezone / 3600)
+    .format("HH");
   console.log(time);
   //current time for example if its 2pm time = 14
   console.log(sunRise);
   //localsunsetTime in 24hrs
-  const imageUrl = (time > sunRise && time < sunset) ? clearDay : nightSky;
+  const imageUrl = time > sunRise && time < sunset ? clearDay : nightSky;
 
   const backgroundStyle = {
     backgroundImage: `url(${imageUrl})`,
@@ -122,8 +122,9 @@ function Main() {
     backgroundPosition: "center",
     backgroundeRepeat: "no-repeat",
     backgroundAttachment: "fixed",
-    height: "100%",
-    overflow: "",
+    minHeight:"100%",
+    paddingBottom: "10rem"
+    
   };
 
   return (
@@ -147,7 +148,6 @@ function Main() {
       />
     </div>
   );
-
 }
 
 export default Main;
